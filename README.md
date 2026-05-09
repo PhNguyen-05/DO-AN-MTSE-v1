@@ -80,22 +80,15 @@ Body:
 
 ## 3. Tạo database MongoDB để test
 
-Bạn có thể dùng MongoDB local hoặc MongoDB Atlas.
+Mở MongoDB Compass.
 
-### Cách 1: MongoDB local
-
-1. Cài MongoDB Community Server:
-   <https://www.mongodb.com/try/download/community>
-2. Cài MongoDB Compass:
-   <https://www.mongodb.com/products/tools/compass>
-3. Mở MongoDB Compass.
-4. Connect bằng URI:
+Connect bằng URI:
 
 ```txt
 mongodb://127.0.0.1:27017
 ```
 
-5. Project sẽ tự tạo database tên `forgot_password_demo` khi bạn chạy seed hoặc gọi API.
+Project sẽ tự tạo database tên `forgot_password_demo` khi bạn chạy seed hoặc gọi API.
 
 File `.env` đang dùng sẵn URI local:
 
@@ -103,21 +96,9 @@ File `.env` đang dùng sẵn URI local:
 MONGO_URI=mongodb://127.0.0.1:27017/forgot_password_demo
 ```
 
-### Cách 2: MongoDB Atlas
-
-1. Vào <https://www.mongodb.com/products/platform/atlas-database>
-2. Tạo tài khoản MongoDB Atlas.
-3. Tạo cluster miễn phí M0.
-4. Vào **Database Access** để tạo database user.
-5. Vào **Network Access** để thêm IP. Khi demo có thể dùng `0.0.0.0/0`.
-6. Vào **Connect** → **Drivers** để lấy connection string.
-7. Sửa `.env`:
-
-```env
-MONGO_URI=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/forgot_password_demo
-```
-
 ## 4. Tạo một tài khoản trong MongoDB để test
+
+Cách 1: Tạo bằng lệnh seed
 
 Mở file `.env` và sửa thông tin tài khoản test:
 
@@ -126,11 +107,6 @@ SEED_FULL_NAME=Nguyen Van A
 SEED_EMAIL=test@gmail.com
 SEED_PASSWORD=123456
 ```
-
-Lưu ý:
-
-- `SEED_EMAIL` nên là Gmail thật của bạn nếu muốn nhận OTP thật.
-- Nếu chỉ test nhanh, để email bất kỳ cũng được, OTP sẽ hiện trong terminal khi chưa cấu hình Gmail gửi mail.
 
 Sau đó chạy:
 
@@ -152,6 +128,38 @@ Vào MongoDB Compass sẽ thấy:
 Database: forgot_password_demo
 Collection: users
 Document: tài khoản test vừa tạo
+```
+
+Cách 2: Tạo trực tiếp trong MongoDB Compass
+
+Mở MongoDB Compass, connect:
+
+```txt
+mongodb://127.0.0.1:27017
+```
+
+Vào database:
+
+```txt
+forgot_password_demo
+```
+
+Vào collection:
+
+```txt
+users
+```
+
+Thêm document mới:
+
+Ví dụ:
+```txt
+{
+  "fullName": "Nguyen Van A",
+  "email": "nguyenvana@gmail.com",
+  "password": "$2a$10$placeholder",
+  "resetPasswordOtpVerified": false
+}
 ```
 
 ## 5. Cấu hình Gmail để gửi OTP thật
@@ -264,21 +272,3 @@ Body:
   "newPassword": "654321"
 }
 ```
-
-## 8. Push project này lên GitHub
-
-Chỉ push thư mục `forgot-password-api-only`.
-
-```bash
-cd forgot-password-api-only
-git init
-git add .
-git commit -m "Add forgot password OTP API"
-git branch -M main
-git remote add origin https://github.com/USERNAME/forgot-password-api-only.git
-git push -u origin main
-```
-
-Không push file `.env` vì file này chứa mật khẩu Gmail. `.gitignore` đã chặn `.env`.
-
-Khi nộp bài hoặc chạy trên máy khác, copy `.env.example` thành `.env` rồi điền lại cấu hình.
