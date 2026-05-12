@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const bcrypt = require("bcryptjs");
 const generateOtp = require("../utils/generateOtp");
 const sendEmail = require("../utils/sendEmail");
 
@@ -104,7 +105,7 @@ const resetPassword = async (req, res, next) => {
       throw new Error("OTP da het han");
     }
 
-    user.password = newPassword;
+    user.password = await bcrypt.hash(newPassword, 10);
     user.resetPasswordOtp = undefined;
     user.resetPasswordOtpExpires = undefined;
     user.resetPasswordOtpVerified = false;
